@@ -52,23 +52,44 @@ def apps():
 
 # Run the python code and return its outputs and stdout
 def run_code(code):
+
     response = {}
     # (1) Get user inputs as json
     inputs = request.get_json(force=True)
     # (3) Capture stdout
     stdout = io.StringIO()
-    with redirect_stdout(stdout):
+    # with redirect_stdout(stdout):
         # (4) Compile and run the app code
-        try:
-            g = {}
-            exec(code, g)
+    try:
+        
+        # note: have to do frontend on actual website, download json file, replace the hello_world.json
+        # code here
+        # Import necessary libraries
+        import os 
+        import openai
 
-            assert "main" in g, "'def main(inputs):' is not defined"
-            outputs = g["main"](inputs)
+        from langchain.chains import ConversationalRetrievalChain, RetrievalQA
+        from langchain.chat_models import ChatOpenAI
+        from langchain.document_loaders import DirectoryLoader, TextLoader
+        from langchain.embeddings import OpenAIEmbeddings
+        from langchain.indexes import VectorstoreIndexCreator
+        from langchain.indexes.vectorstore import VectorStoreIndexWrapper
+        from langchain.llms import OpenAI
+        from langchain.vectorstores import Chroma
 
-            response["outputs"] = clean_json(outputs)
-        except Exception as e:
-            response["error"] = traceback.format_exc()
+        import streamlit as st 
+        from langchain.llms import OpenAI
+        from langchain.prompts import PromptTemplate
+        from langchain.chains import LLMChain, SequentialChain 
+        from langchain.memory import ConversationBufferMemory
+        from langchain.utilities import WikipediaAPIWrapper 
+
+        from pdfreader import PDFDocument, SimplePDFViewer
+        
+
+        response["outputs"] = clean_json(outputs)
+    except Exception as e:
+        response["error"] = traceback.format_exc()
     response["stdout"] = stdout.getvalue()
     return response
 
@@ -94,6 +115,7 @@ def clean_json(dirty_json):
 # POST: run the code of the specific app with inputs and returns the outputs
 @server.route("/app/<string:app_id>", methods=["GET", "POST"])
 def app(app_id):
+    print("IN APP/")
     try:
         with open(os.path.join(APPS_PATH, app_id + ".json"), "r") as f:
             data = json.load(f)
@@ -130,6 +152,7 @@ def app(app_id):
         }  # Remove None values
         response["app_id"] = app_id
     elif request.method == "POST":
+        print("working")
         response = run_code(data.get("code"))
     return jsonify(response), 200
 

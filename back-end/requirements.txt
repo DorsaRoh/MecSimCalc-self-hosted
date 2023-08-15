@@ -15,3 +15,11 @@ Pillow==9.0.1
 geopandas==0.10.2
 folium==0.12.1
 xlrd==2.0.1
+
+
+# For app
+langchain
+openai
+streamlit
+pdfreader
+wikipedia-api

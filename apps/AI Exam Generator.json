@@ -1,0 +1,136 @@
+{
+	"id": 2345,
+	"app_id": "5380388",
+	"name": "AI Exam Generator",
+	"description": "Generate exams and questions tailored to your needs and requirements, trained on your own data.",
+	"author": {
+		"id": "fcefbbbc-0d2b-45a9-a719-71beb49687fe",
+		"username": "Dorsa Rohani",
+		"image": "https://api.mecsimcalc.com//media/users/fcefbbbc-0d2b-45a9-a719-71beb49687fe_UoVOays.png",
+		"slug": "dorsa"
+	},
+	"status": "draft",
+	"permission": "public",
+	"category": {
+		"id": 4,
+		"name": "Education",
+		"description": "Educational Resources"
+	},
+	"tags": [
+		{
+			"id": 123,
+			"name": "Academic"
+		},
+		{
+			"id": 177,
+			"name": "Artificial Intelligence"
+		}
+	],
+	"created_on": "2023-08-14T18:54:03.542997-06:00",
+	"updated_at": "2023-08-14T19:10:34.196529-06:00",
+	"primary_image": "https://api.mecsimcalc.com//media/apps/default/primary_image_16.jpg",
+	"favicon_image": "https://api.mecsimcalc.com//media/apps/default/favicon.png",
+	"secondary_images": [],
+	"input_sections": {
+		"order": [
+			"section-0"
+		],
+		"section-0": {
+			"id": "section-0",
+			"title": "AI Exam Generator",
+			"inputs_order": [
+				"input_0",
+				"input_1",
+				"input_2"
+			]
+		}
+	},
+	"input_inputs": {
+		"input_0": {
+			"id": "input_0",
+			"props": {
+				"name": "file",
+				"label": "Enter your data here:",
+				"accept": ".pdf",
+				"maxSize": 100000000,
+				"disabled": false,
+				"multiple": false,
+				"required": true,
+				"conditionalInput": {}
+			},
+			"component": "FileInput"
+		},
+		"input_1": {
+			"id": "input_1",
+			"props": {
+				"name": "key",
+				"label": "Enter your OpenAI API key:",
+				"pattern": ".*",
+				"disabled": false,
+				"required": true,
+				"maxLength": 10000,
+				"minLength": 0,
+				"placeholder": "OpenAI API key",
+				"defaultValue": "",
+				"conditionalInput": {}
+			},
+			"component": "TextInput"
+		},
+		"input_2": {
+			"id": "input_2",
+			"props": {
+				"name": "subject",
+				"label": "Subject",
+				"pattern": ".*",
+				"disabled": false,
+				"required": true,
+				"maxLength": 10000,
+				"minLength": 0,
+				"placeholder": "Physics",
+				"defaultValue": "",
+				"conditionalInput": {}
+			},
+			"component": "TextInput"
+		}
+	},
+	"input_layout": {
+		"section-0": [
+			{
+				"h": 1,
+				"i": "input_0",
+				"w": 8,
+				"x": 1,
+				"y": 1,
+				"moved": false,
+				"static": false
+			},
+			{
+				"h": 1,
+				"i": "input_1",
+				"w": 8,
+				"x": 1,
+				"y": 0,
+				"moved": false,
+				"static": false,
+				"isDraggable": true
+			},
+			{
+				"h": 1,
+				"i": "input_2",
+				"w": 8,
+				"x": 1,
+				"y": 2,
+				"moved": false,
+				"static": false,
+				"isDraggable": true
+			}
+		]
+	},
+	"code": "from mimetypes import guess_extension, guess_type\r\nimport base64\r\nimport io\r\n\r\n\r\ndef main(inputs):\r\n    # Decode the file data\r\n    [meta, data] = inputs['file'].split(\";base64,\")\r\n    metadata = meta + \";base64,\"\r\n    file_extension = guess_extension(guess_type(metadata)[0])\r\n    file_data = io.BytesIO(base64.b64decode(data))\r\n\r\n    # Use file_data here\r\n    print(file_data)\r\n\r\n    # Re-encode file data\r\n    encoded_data = metadata + base64.b64encode(file_data.getvalue()).decode()\r\n\r\n    return {\r\n        # Display first 100 characters of data string\r\n        \"data\": encoded_data[:100] + \"...\",\r\n        # Download using <a> tags\r\n        \"download\": \"<a href='\" + encoded_data + \"' download='hello\" + file_extension + \"'>Download</a>\"\r\n    }",
+	"output_html": "<p><strong>Data: {{ outputs.data }}</strong></p><p><br></p><p><strong>{{ outputs.download }}</strong></p>",
+	"docs_html": "<p>N/A</p>",
+	"related_app": null,
+	"views": 0,
+	"stars": 0,
+	"env": "mecsimcalc/mecsimcalc:default-2023"
+}
